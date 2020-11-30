@@ -1,0 +1,962 @@
+
+
+// 心跳包 <<"cmd">> := 1000
+// @name heart
+message m_1000_tos{}
+message m_1000_toc{}
+
+// 获取短信验证码
+// @name get_phone_code
+message m_1001_tos{
+	required    string      country     = 1; // 国家
+	required    string      phone       = 2; // 手机号
+}
+message m_1001_toc{}
+
+
+// 获取电子邮箱验证码
+// @name get_email_code
+message m_1002_tos{
+	required    string      email       = 1; // 电子邮箱
+}
+message m_1002_toc{}
+
+
+// 手机注册
+// @name register_by_phone
+message m_1003_tos{
+	required    string      phone       = 1; // 手机号
+	required    string      code        = 2; // 验证码
+	required    string      pass        = 3; // 密码
+	optional    string      parent      = 4; // 推荐码
+    optional    string      google      = 5; // 谷歌验证器
+}
+
+message m_1003_toc{}
+
+// 邮箱注册
+// @name register_by_email
+message m_1004_tos{
+	required    string      email       = 1; // 邮箱
+	required    string      code        = 2; // 验证码
+	required    string      pass        = 3; // 密码
+	optional    string      parent      = 4; // 推荐码
+}
+
+message m_1004_toc{}
+
+
+// 手机登录
+// @name login_by_phone
+message m_1005_tos{
+//	required	string		code		= 1; // 验证码
+	required    string      country     = 1; // 国家
+	required    string      phone       = 2; // 手机号
+	required	string		pass		= 3; // 密码
+}
+message m_1005_toc{
+	required	p_login_info	info	= 1;
+}
+
+message p_login_info{
+    required    uint32      player_id       = 1; // 玩家ID
+    required    string      account         = 2; // 账号
+    required    string      small_trader_id = 3; // 商人类型 false=不是商人 true=商人 checking=审核中
+}
+
+message p_player_info{
+	required	uint32		player_id	    = 1; // 玩家ID
+	required	string		account		    = 2; // 账号
+	required	bool		auth		    = 3; // 实名认证 true=已认证 false=未认证 checking=审核中
+	required	string		phone		    = 4; // 绑定手机
+	required	string		email		    = 5; // 绑定邮箱
+	required	bool		money_pass	    = 6; // 资金密码 true=已设置 false=未设置
+    required    string      small_trader_id = 7; // 商人类型 false=不是商人 true=商人 checking=审核中
+}
+
+
+// 掉线重连
+// @name reconnect
+message m_1006_tos{
+    required    uint32      player_id   = 1;
+    required    string      code        = 2;
+}
+message m_1006_toc{
+    required    p_login_info    info    = 1;
+}
+
+
+// 查看谷歌验证器
+// @name get_google
+message m_1007_tos{
+    required    string      phone       = 1;
+}
+message m_1007_toc{
+    required    string      google      = 1;
+}
+
+
+
+
+// 登录之后的操作
+
+
+// 个人中心
+// @name get_person_info
+message m_2001_tos{}
+message m_2001_toc{
+	required	p_player_info	info	= 1;
+}
+
+
+// 实名认证
+message m_2002_tos{
+	required	string		country		= 1; // 国家
+	required	string		real_name	= 2; // 姓名
+	required	string		id_card		= 3; // 身份证号码
+	required	string		front		= 4; // 正面身份证
+	required	string		back		= 5; // 反面身份证
+	required	string		hold		= 6; // 手持身份证
+}
+message m_2002_toc{}
+
+// 查看实名
+message m_2003_tos{}
+message m_2003_toc{
+	required	string		country		= 1; // 证件类型 0 身份证 1护照
+	required	string		real_name	= 2; // 姓名
+	required	string		id_card		= 3; // 身份证号码
+}
+
+
+// 绑定邮箱
+message m_2004_tos{
+	required	string		code		= 1; // 邮箱验证码
+}
+message m_2004_toc{}
+
+// 设置资金密码
+message m_2005_tos{
+	required	string		login_pass	= 1; // 登录密码
+	required	string		money_pass	= 2; // 资金密码
+	required	string		code		= 3; // 手机验证码
+}
+message m_2005_toc{}
+
+// 查看登录记录
+message m_2006_tos{
+	required	uint32		page		= 1; // 页数
+	required	uint32		column		= 2; // 数量
+}
+message m_2006_toc{
+	repeated	p_login_log	list		= 1;
+}
+message p_login_log{
+	required	string		time		= 1; // 时间
+	required	string		type		= 2; // 登录方式
+	required	string		ip			= 3; // IP
+	required	string		state		= 4; // 状态
+}
+
+// 查看安全设置历史
+message m_2007_tos{
+	required	uint32		page		= 1; // 页数
+	required	uint32		column		= 2; // 数量
+}
+message m_2007_toc{
+	repeated	p_login_log	list		= 1;
+}
+message p_security_log{
+	repeated	string		time		= 1; // 时间
+	required	string		type		= 2; // 类型
+	required	string		ip			= 3; // ip
+	required	string		state		= 4; // 状态
+}
+
+// 我的消息
+message m_2008_tos{}
+message m_2008_toc{
+	repeated	p_notice_msg	list	= 1;
+}
+message p_notice_msg{
+	required	uint32		id			= 1; // 唯一标识
+	required	string		title		= 2; // 标题
+	required	string		content		= 3; // 内容
+	required	string		time		= 4; // 时间
+	required	string		state		= 5; // 状态
+}
+
+// 查看支付管理
+message m_2009_tos{
+	required	string		type		= 1; // bank,wechat,alipay,paypal,cloud
+}
+message m_2009_toc{
+	repeated	p_pay_info	list		= 1;
+}
+message p_pay_info{
+	required	uint32		id			= 1; // 唯一id
+	required	string		name		= 2; // 姓名
+	required	string		bank		= 3; // 银行名称
+	required	string		branch		= 4; // 支行名称
+	required	string		account		= 5; // 卡号
+	required	bool		state		= 6; // 是否打钩
+
+	optional	string		url			= 7; // 收款码
+	optional	float		limit		= 8; // 固定额度
+}
+
+// 添加支付方式
+message m_2010_tos{
+	required	string		type		= 1; // 支付方式 bank,wechat,alipay,paypal,cloud
+	required	string		name		= 2; // 姓名
+	required	string		bank		= 3; // 银行名称
+	required	string		branch		= 4; // 支行名称
+	required	string		account		= 5; // 卡号
+	optional	string		url			= 6; // 收款码
+	optional	float		limit		= 7; // 固定额度
+	required	string		pass		= 8; // 资金密码
+}
+message m_2010_toc{}
+
+
+// 修改登录密码
+message m_2011_tos{
+	required	string		old_pass	= 1; // 旧密码
+	required	string		new_pass	= 2; // 新密码
+	required	string		code		= 3; // 验证码
+}
+message m_2011_toc{}
+
+
+// 获取短信验证码
+// @name get_phone_code
+message m_2012_tos{
+	required    string      country     = 1; // 国家
+	required    string      phone       = 2; // 手机号
+}
+message m_2012_toc{}
+
+
+// 获取电子邮箱验证码
+// @name get_email_code
+message m_2013_tos{
+	required    string      email       = 1; // 电子邮箱
+}
+message m_2013_toc{}
+
+
+// 删除支付方式
+message m_2014_tos{
+	required	uint32		id			= 1;
+}
+message m_2014_toc{}
+
+// 勾选支付方式
+message m_2015_tos{
+	required	uint32		id			= 1;
+}
+message m_2015_toc{}
+
+
+// 查看保证金档位
+message m_2016_tos{}
+message m_2016_toc{
+	repeated	p_deposit_val	list	= 1;
+}
+message p_deposit_val{
+	required	uint32			id		= 1;
+	required	string			type	= 2;
+	required	uint32			amount	= 3;
+	required	uint32			credit	= 4;
+}
+
+// 查看广告
+message m_2017_tos{
+	required	uint32			trade_type  = 1;
+}
+message m_2017_toc{
+	repeated	p_ad_info		list	= 1;
+}
+message p_ad_info{
+	required	uint32			id			= 1; // 唯一id
+	required	string			country		= 2; // 国家
+	required	string			money_type	= 3; // 人民币
+	required	string			trade_type	= 4; // 0：买入 1：卖出
+	required	string			coin_type	= 5; // 币种
+	required	float			price		= 6; // 单价
+	required	string			ad_type		= 7; // 广告类型(普通/大宗/B2B)
+	required	uint32			trade_num	= 8; // 交易数量
+	required	uint32			limit_time	= 9; // 付款期限
+	required	uint32			amount_min	=10; // 最小单笔限额
+	required	uint32			amount_max	=11; // 最大单笔限额
+	required	uint32			pay_type	=12; // 交易方式
+	required	string			auto_reply	=13; // 自动回复
+	required	string			money_pass	=14; // 资金密码
+    
+
+	optional	float			cur_traded_num	    =15;//当前已交易的总数量
+	optional	float			remain_traded_num	=16;//剩余数量
+	optional	float			frozen_trade_num    =17;//当前已冻结的数量
+	optional	string			created_at		    =18;//时间
+    required    uint32          state               =19;// 1=上线 2=下线
+}
+
+// 查看交易方式
+message m_2018_tos{}
+message m_2018_toc{
+	repeated	p_select_pay_ways	list	= 1;
+}
+message p_select_pay_ways{
+	required	uint32			id			= 1;
+	required	string			type		= 2;
+	required	string			msg			= 3;
+	optional	string			account_member= 4;
+	optional	string			other_info	= 5;
+}
+
+
+// 发布广告
+message m_2019_tos{
+	required	p_ad_info		info		= 1;
+}
+message m_2019_toc{}
+
+// 操作广告
+message m_2020_tos{
+	required	uint32			id			= 1;
+    required    uint32          flag        = 2; // 0=删除 1=上线 2=下线
+}
+message m_2020_toc{}
+
+
+// 申请成为商家
+// @name apply_to_store
+message m_2022_tos{
+	required	uint32			id			= 1;
+	required	string			parent		= 2;
+}
+
+message m_2022_toc{}
+
+
+// 订单管理
+// @name order_mgr
+message m_2023_tos{
+	required	uint32			type		= 1; // 0=全部1=未付款 2=已付款 3=已完成 4=已取消 5=申诉中
+	required	uint32			page		= 2;
+	required	uint32			column		= 3;
+    required    uint32          is_merchant = 4; // 1=场外（商人-商人之间交易） 0=场内（商人-商户之间交易）
+}
+message m_2023_toc{
+	repeated	p_order_log		list		= 1;
+}
+
+message p_order_log{
+	required	string		order_id		= 1; // 订单号
+	required	string		pay_way		    = 2; // 支付类型
+	required	string		created_at		= 3; // 创建时间
+	required	string		trade_type		= 4; // 0买入 1卖出
+	required	string		name			= 5; // 交易对象
+	required	string		coin_count	    = 6; // 数量
+	required	string		coin_price		= 7; // 单价
+	required	string		pay_count		= 8; // 总价
+	required	string		memo			= 9; // 参考号
+    optional    string      coin_type       =10; // 币种DC USDX
+    optional    string      pay_way_details =11; // 收款方式（APP用）
+    optional    string      money_type      =12; // 人民币类型
+    optional    p_pay_info  pay_info        =13; // 收款信息
+}
+
+// 我的邀请
+message  m_2024_tos{}
+message  m_2024_toc{}
+
+// 商家设置
+message m_2025_tos{}
+message m_2025_toc{
+    required    string      name            = 1; // 昵称
+    required    uint32      deposit_lv      = 2; // 商家保证金
+    required    uint32      seven_trade     = 3; // 近七天成交
+    required    uint32      complaints      = 4; // 被投诉次数
+    required    uint32      credit          = 5; // 综合评分
+    required    string      eos_account     = 6; // EOS账号
+}
+
+// 查看法币交易
+message m_2026_tos{
+	required	string		ad_type		= 1; // 广告类型 0=普通 1=大宗 2=B2B(放币)
+	required	string		trade_type	= 2; // 交易类型 0买入 1卖出
+    required    string      coin_type   = 3; // DC/USDX
+}
+message m_2026_toc{
+	required	uint32		id			= 0; // 广告id
+	required	string		name		= 1; // 商家
+	required	uint32		credit		= 2; // 信用分
+	required	uint32		seven		= 3; // 7日交易量
+	required	string		price		= 4; // 单价
+	required	string		remain_traded_num		= 5; // 数量
+	required	string		amount_min	= 6; // 最小
+	required	string		amount_max	= 7; // 最大
+	repeated	string		pay_ways	= 8; // 支付方式
+	required	string		status		= 9; // 交易状态 0空闲 1交易中 2=离线
+}
+
+// 下单(买入、卖出)
+message m_2027_tos{
+	required	string		pay_type	= 1; // 卡的类别 1微信2支付宝3paypal4银行5云闪付6qq
+	required	string		amount		= 2; // CNY 总量
+	required	uint32		ad_id		= 3; // 广告ID
+    optional    string      money_pass  = 4; // 资金密码(卖出的时候使用)
+}
+message m_2027_toc{
+    required    string      order_id    = 1; // 订单号
+}
+
+
+// 确认付款
+message m_2028_tos{
+	required	string		order_id	= 1;
+}
+message m_2028_toc{}
+
+// 取消订单
+message m_2029_tos{
+	required	string		order_id	= 1;
+}
+message m_2029_toc{}
+
+// 申诉
+message m_2030_tos{
+	required	string		order_id	= 1;
+	required	string		msg			= 2; // 申诉理由
+}
+message m_2030_toc{}
+
+// 根据订单号查看订单详情
+message m_2031_tos{
+    required    string      order_id    = 1;
+}
+message m_2031_toc{
+    required    p_order_detail  info    = 1;
+}
+
+
+// 资金管理
+message m_2032_tos{}
+message m_2032_toc{
+    repeated    p_cash_info     list    = 1;
+}
+message p_cash_info{
+    required    string      coin_type       = 1; // 币种
+    required    string      total           = 2; // 总数(个)
+    required    string      value_current   = 3; // 可用
+    required    string      value_frozen    = 4; // 冻结
+    required    string      cnyAmount       = 5; // 折合(CNY)
+}
+
+// 资金流水
+message m_2033_tos{}
+message m_2033_toc{
+    repeated    p_flows     list            = 1;
+}
+message p_flows{
+    required    uint32      id              = 1; //
+    required    string      created_at      = 2; // 时间
+    required    string      type            = 3; // 类型
+    required    string      amount          = 4; // 数量
+    required    string      coin_type       = 5; // 币种
+    required    string      memo            = 6; // 备注
+}
+
+
+// 撤销已付款
+message m_2034_tos{
+    required    string        order_id      = 1;
+}
+message m_2034_toc{}
+
+
+// 修改昵称
+// @name alter_nickname
+message m_2035_tos{
+    required    string          name        = 1;
+}
+message m_2035_toc{}
+
+
+// 退出登录
+// @name exit
+message m_2099_tos{}
+message m_2099_toc{}
+
+
+
+
+
+// 4000-4999协议 专门给APP用
+
+// 4001
+message m_player_base_attr_toc{
+        optional    int32      id               = 1; //唯一id
+        optional    string     account          = 2; //账号
+        optional    string     name             = 3; //别名可以为空
+        optional    int32      vip              = 4; //认证等级012级
+        optional    string     email            = 5; //邮箱
+        optional    int32      small_trader_id  = 6; //0普通>0商人
+        // repeated    p_address  payway           = 7; //支付类型1微信2支付宝3facebook4银行
+        optional    int32      country_code     = 8; //国家代号
+        optional    int64      phone            = 9; //手机号码
+        optional    int32      step             = 10;//进行步骤
+        optional    string     apikey           = 11;//apikey
+        optional    int32      is_customer      = 12;//0普通用户1客服
+}
+
+// 4002
+message m_player_base_money_toc{
+        repeated    p_virtual_money virtual_money   = 1;//数字货币类型和数量
+}
+message p_virtual_money{
+        optional    int32      id               = 1; //唯一标识
+        optional    string     main_symbol      = 2; //主链代号
+        optional    string     branch_symbol    = 3; //侧链代号
+        optional    string     address          = 4; //地址
+        optional    double     value_current    = 5; //当前还剩多少钱
+        optional    double     value_frozen     = 6; //冻结的钱
+        optional    int32      state            = 7; //状态0正常其他不正常
+}
+
+// 4003
+message m_vip_change_toc{
+        optional    int32       vip             = 1;
+        optional    int32       remark_id       = 2;
+}
+
+// 4004
+//买卖订单生成提示 通知商人
+message m_order_msg_tos{
+        optional    string      name            = 1; //商人名称
+        optional    string      order_str       = 2; //订单号order_id  MD5的那个
+        optional    int32       type            = 3; //发起方的订单类型 0买入 1卖出
+        optional    string      symbol          = 4; //币名称
+        optional    double      num             = 5; //数量
+        optional    int32       id              = 6; //商人id
+        optional    int32       end_time        = 7; //订单结束的时间戳
+        optional    string      msg             = 8; //商人默认的发到聊天的消息
+}
+//买卖订单生成提示 通知商人
+message m_order_msg_toc{
+        optional    string      name            = 1; //发起方普通用户实名认证的名字
+        optional    string      order_str       = 2; //订单号order_id  MD5的那个
+        optional    int32       type            = 3; //发起方的订单类型 0买入 1卖出
+        optional    string      symbol          = 4; //币名称
+        optional    double      num             = 5; //数量
+}
+
+
+// 4005
+//买家取消交易通知
+message m_order_cancel_tos{
+        optional    int32       buy_id          = 1; //买方id
+        optional    int32       sell_id         = 2; //卖方id
+        optional    string      order_str       = 3; //订单号order_id  MD5的那个
+        optional    int32       dayint          = 4; //订单创建的日期20190911
+            
+}
+message m_order_cancel_toc{
+        optional    string      order_str       = 1; //订单号order_id  MD5的那个
+}
+
+
+// 4006
+//买家已付款通知
+message m_order_had_pay_tos{
+        optional    int32       buy_id          = 1; //买方id
+        optional    int32       sell_id         = 2; //卖方id
+        optional    string      order_str       = 3; //订单号order_id  MD5的那个
+        optional    int32       dayint          = 4; //订单创建的日期20190911
+}
+message m_order_had_pay_toc{
+        optional    string      order_str       = 1; //订单号order_id  MD5的那个
+}
+
+// 4007
+//付款时间超时关闭订单通知
+message m_order_time_out_toc{
+        optional    string      order_str       = 1; //订单号order_id  MD5的那个
+}
+
+
+// 4008
+//买家撤销已付款通知
+message m_order_close_pay_tos{
+        optional    int32       buy_id          = 1; //买方id
+        optional    int32       sell_id         = 2; //卖方id
+        optional    int32       to_state        = 3; //撤销后跳转的状态
+        optional    string      order_str       = 4; //订单号order_id  MD5的那个
+        optional    int32       dayint          = 5; //订单创建的日期20190911
+}
+message m_order_close_pay_toc{
+        optional    int32       to_state        = 1; //撤销后跳转的状态
+        optional    string      order_str       = 2; //订单号order_id  MD5的那个
+}
+
+
+// 4009
+//8卖家确认收款通知
+message m_order_received_tos{
+        optional    int32       buy_id          = 1; //买方id
+        optional    int32       sell_id         = 2; //卖方id
+        optional    string      order_str       = 3; //订单号order_id  MD5的那个
+        optional    int32       dayint          = 4; //订单创建的日期20190911
+}
+message m_order_received_toc{
+        optional    string      order_str       = 1; //订单号order_id  MD5的那个
+}
+
+
+// 4010
+//9被申诉通知
+message m_order_complaint_tos{
+        optional    int32       complaint_id    = 1; //起诉id
+        optional    int32       be_complaint_id = 2; //被投诉id
+        optional    string      order_str       = 3; //订单号order_id  MD5的那个
+        optional    int32       dayint          = 4; //订单创建的日期20190911
+}
+message m_order_complaint_toc{
+        optional    string      order_str       = 1; //订单号order_id  MD5的那个
+}
+
+
+// 4011
+//发聊天消息
+message m_order_chat_tos{
+        optional    string      order_str       = 1; //订单号order_id  MD5的那个
+        optional    int32       id              = 2; //base_attribute 用户表中的 目标用户的 ID
+        optional    string      type            = 3; //聊天类型word 普通文字 / img图片
+        optional    string      msg             = 4; //聊天内容  / 图片地址
+        optional    string      name            = 5; //发消息人的名字
+        optional    int32       dayint          = 6; //订单创建的日期20190911
+}
+//收聊天消息
+message m_order_chat_toc{
+        optional    p_get_order_chat_one data   = 1;
+}
+
+
+
+// 4012
+//获取某订单的聊天信息
+message m_get_order_chat_list_tos{
+        optional    string      order_str       = 1; //订单号order_id  MD5的那个
+        optional    int32       dayint          = 2; //订单创建的日期20190911
+}
+//收聊天消息
+message m_get_order_chat_list_toc{
+        repeated    p_get_order_chat_one    list= 1; //聊天数据
+}
+message p_get_order_chat_one{
+        optional    string      order_str       = 1; //订单号order_id  MD5的那个
+        optional    int32       id              = 2; //base_attribute 用户表中的 发起用户的 ID 0表示系统消息
+        optional    string      type            = 3; //word 普通文字/ img图片
+        optional    string      msg             = 4; //聊天内容    / 图片地址 / 系统消id息读配置表
+        optional    string      name            = 5; //发消息人的名字
+        optional    int32       timeint         = 6; //时间戳发消息的时间
+        optional    string      arg             = 7; //额外参数 当系统投诉消息表示投诉人的id
+}
+
+// 4013
+message m_get_reght_top_msg_tos{
+        optional    int32       id              = 1; //无意义
+}
+message m_get_reght_top_msg_toc{
+        repeated    p_reght_top_msg     list    = 1; //聊天数据
+}
+message p_reght_top_msg{
+        optional    int32       id              = 1; //消息id
+        optional    int32       msg_type        = 2; //消息类型 1实时订单状态消息 2订单聊天消息提示'
+        optional    string      order_id        = 3; //订单md5_id
+        optional    int32       order_val       = 4; //参数值 针对消息类型1[为订单状态标识] 2发送聊天消息次数
+        optional    string      from_name       = 5; //消息发送者名称
+}
+
+// 4014
+message m_set_reght_top_msg_state_tos{
+        optional    int32       id              = 1; //消息id
+}
+message m_set_reght_top_msg_state_toc{
+        optional    int32       id              = 1; //消息id
+}
+
+// 4015
+message m_order_monitor_tos{
+        optional    int32       way             = 1; //1微信2支付宝
+        optional    int32       num             = 2; //金额整数部分
+        optional    float       suffix          = 3; //金额小数部分
+}
+message m_order_monitor_toc{
+        optional    int32       result          = 1; //0没匹配到1已匹配
+}
+
+
+
+
+
+
+
+// 4016
+// 获取可交易广告
+message m_4016_tos{
+    required    string      post_country        = 1; // 86
+    required    string      money_type          = 2; // CNY
+    required    string      trade_type          = 3; // 0=买入 1=卖出
+    required    string      coin_type           = 4; // DC
+    required    string      pay_type            = 5; // 支付方式 1微信2支付宝3paypal4银行5云闪付6qq
+    required    string      deal_num            = 6; // 数量
+    required    string      deal_money          = 7; // 金额
+    required    uint32      buy_type            = 8; // 
+}
+message m_4016_toc{
+    required    string      pay_type            = 1; // 支付方式 1微信2支付宝3paypal4银行5云闪付6qq
+    required    float       price               = 2; // 成交单价（1.00CNY/DC）
+    required    float       coin_count          = 3; // 成交数量（298.804DC）
+    required    float       pay_count           = 4; // 实付金额（300CNY）
+    optional    string      coin_type           = 5; // 币种，如DC
+    required    uint32      ad_id               = 6; // 广告ID
+    required    string      trade_type          = 7; // 0=买入 1=卖出
+    required    string      money_type          = 8; // CNY
+}
+
+
+// 4017
+// 还原可交易广告
+message m_4017_tos{
+    required    uint32      ad_id               = 1; // 广告ID
+//    required    string      trade_type          = 1; // 0=买入 1=卖出
+//    required    string      coin_type           = 2; // USDX DC
+//    required    string      pay_type            = 3; // 支付方式 1微信2支付宝3paypal4银行5云闪付6qq
+//    required    string      buy_type            = 4; // 0按金额 1按币量
+}
+message m_4017_toc{}
+
+// 4018
+// 创建订单
+message m_4018_tos{
+    required    uint32      ad_id               = 1; // 广告ID
+}
+message m_4018_toc{
+    required    string      order_id            = 1; // 订单号
+}
+
+
+//
+
+
+// 订单列表数据
+// 使用2023协议
+
+
+// 取消订单
+// 使用2029协议
+
+// 买家已付款
+// 使用2028协议
+
+// 买家撤销已付款
+// 使用2034协议
+
+// 发起投诉
+// 使用2030协议
+
+// 申诉详情
+// 4019
+message m_4019_tos{
+    required    string      order_id            = 1;
+}
+message m_4019_toc{
+    required    string      msg                 = 2;
+}
+
+
+// 4020 获取商人申请状态
+message m_4020_tos{}
+message m_4020_toc{
+	required	uint32		state			= 1; // 0=未申请 1=审核中 2=审批不通过 3=通过
+}
+
+// 订单详情
+// 2031
+
+
+
+
+
+
+
+// 支付页面内部API
+
+// 查看支付页面
+message m_9901_tos{
+	required	string		token		= 1;
+}
+message m_9901_toc{
+	required	string		type		= 1; // deposit=充值 withdraw=提现
+	optional	p_deposit_info	info1	= 2;
+	optional	p_withdraw_info	info2	= 3;
+}
+message p_deposit_info{
+	repeated	string		pay_list	= 1; // [bank, wechat, alipay, cloud, paypal]
+	required	float		amount		= 2; // 充值金额
+	required	uint32		min			= 3; // 最低充值金额
+	required	uint32		max			= 4; // 最高充值金额
+}
+message p_withdraw_info{
+	required	string		pay_type	= 1; // 收款方式 bank=银行卡 wechat=微信 alipay=支付宝
+	optional	string		bank		= 2; // 银行名称
+	optional	string		branch		= 3; // 支行名称
+	optional	string		name		= 4; // 用户名
+	optional	string		account		= 5; // 卡号
+	required	float		balance		= 6; // 账户可提现余额
+	optional	float		amount		= 7; // 提款金额
+	optional	string		url			= 8; // 如果pay_type=wechat/alipay/cloud 则显示收款码
+}
+
+// 确认下单(充值的话直接匹配商家；提现的话看是否需要审批，审批后才能匹配商家)
+message m_9902_tos{
+    required    float       amount      = 1; // 金额
+    required    string      pay_type    = 2; // pay_type
+}
+message m_9902_toc{
+	optional	p_order_detail	info	= 1;
+}
+
+message p_order_detail{
+	required	string		order_id	    = 1; // 订单号
+	required	float		pay_count	    = 2; // 收款金额
+	required	float		coin_price	    = 3; // 单价
+	required	float		coin_count	    = 4; // 数量
+	optional	string		memo		    = 9; // 参考码
+	required	uint32		countdown	    =10; // 倒计时
+	required	string		created_at		=12; // 订单时间
+	required	string		state		    =13; // 订单状态
+    required    string      to_name         =14; // 对方名字
+    required    uint32      trade_type      =15; // 0=买入 1=卖出
+    required    string      branch_symbol   =16; // DC/USDX
+    required    string      seven_trade     =17; // 7日成交量
+}
+message p_pay_info{
+    required    uint32        card_type       = 1; // 卡的类别 1微信2支付宝3paypal4银行5云闪付6qq
+    optional    string        open_bank       = 5; // 银行名称
+    optional    string        branch_bank     = 6; // 支行名称
+    optional    string        name            = 7; // 用户名(收款码的收款人)
+    optional    string        account_member  = 8; // 卡号(收款码的收款账号)
+    optional    string        pay_img_address =11; // 收款码
+}
+
+
+// 我已付款
+message m_9903_tos{}
+message m_9903_toc{
+	required p_order_info	info		= 1;
+}
+
+message p_order_info{
+	required	string		order		= 1; // 订单号
+	required	string		name		= 2; // 收款人
+	required	string		account		= 3; // 收款账号
+	required	string		remarks		= 4; // 参考码
+	required	string		time		= 5; // 订单时间
+	required	float		cnyAmount	= 6; // 收款金额
+	required	float		price		= 7; // 单价
+	required	float		coinAmount	= 8; // 数量
+	required	string		status		= 9; // 订单状态
+	required	string		type		=10; // deposit=充值订单 withdraw=提现订单
+}
+
+// 取消订单
+message m_9904_tos{}
+message m_9904_toc{
+	required p_order_info	info		= 1;
+}
+
+// 申诉
+message m_9905_tos{
+	required	string		reason		= 1; // 申诉理由
+}
+message m_9905_toc{
+	required p_order_info	info		= 1;
+}
+
+// 订单状态推送
+message m_9906_toc{
+	required p_order_info	info		= 1;
+}
+
+// 订单列表
+message m_9907_tos{
+	required	string		type		= 1; // 待付款=create 已付款=paid 已完成=finished 已取消=cancel 申诉中=report
+}
+message m_9907_toc{
+	repeated	p_order_list	list	= 1;
+}
+message p_order_list{
+	required	string		type		= 1; // deposit=充值 withdraw=提现
+	required	string		order		= 2; // 订单号
+	required	float		cnyAmount	= 3; // 金额
+	required	string		time		= 4; // 时间
+	required	string		pay_type	= 5; // bank=银行卡 wechat=微信 alipay=支付宝
+}
+
+// 根据订单号查看订单详情
+message m_9908_tos{
+    required    string        order        = 1; // 订单号
+}
+message m_9908_toc{
+    required    p_order_detail  info        = 1;
+}
+
+
+// 支付页面开放对接API
+
+
+// 创建订单
+
+
+
+
+
+
+
+// 后台
+
+
+// EOS转账
+// http://119.8.39.120:30004/bs/eos_transfer
+message tos{
+    required    string      from_id     = 1; // 发起者
+    required    string      to_id       = 2; // 接收者
+    required    string      amount      = 3; // 数量
+    required    string      coin_type   = 4; // 币种
+    required    string      memo        = 5; // 描述
+}
+message toc{
+    
+}
+
+// 查看EOS账号
+// http://119.8.39.120:30004/bs/get_eos_account
+message tos{
+    required    string      account          = 1;
+}
+message toc{
+    
+}
+
+// 查看EOS货币
+// http://119.8.39.120:30004/bs/get_eos_currency
+message tos{
+    required    string      account         = 1;
+    required    string      coin_type       = 2;
+}
+message toc{
+    required    string      balance     = 1;
+}

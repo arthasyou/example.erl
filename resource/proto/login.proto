@@ -1,0 +1,14 @@
+package pba;
+syntax = "proto3";
+
+message m_1001_tos {
+    string id = 1;
+}
+message m_1001_toc {}
+
+message m_2001_tos {
+	uint32	t = 1;
+}
+message m_2001_toc {
+	uint32	t = 1;
+}
