@@ -15,7 +15,7 @@
 -export([start/0]).
 
 start() ->
-    {ok, Port} = application:get_env(http, port),
+    {ok, Port} = application:get_env(example, http_port),
     Dispatch = cowboy_router:compile([
         {'_', [
             {"/[...]", toppage_h, []}

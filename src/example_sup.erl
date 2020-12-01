@@ -3,7 +3,7 @@
 %% @end
 %%%-------------------------------------------------------------------
 
--module(logic_sup).
+-module(example_sup).
 
 -behaviour(supervisor).
 

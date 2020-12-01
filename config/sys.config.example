@@ -38,18 +38,18 @@
         ]}
     ]},
 
-	{tcp, [
+	{erl_tcp, [
 		{ports, [
  			{port1, [
-				{port, 30001},
+				{port, 30003},
  				{type, web},
-                {ssl, false}
+                {ssl, true}
  			]} 			
  		]},
 		{data_size, 2}
 	]},
 
-    {db, [
+    {erl_db, [
         {pools, [
             {pool1, [
                 {name, {local, mysql}},
@@ -57,17 +57,17 @@
                 {size, 10},
                 {max_overflow, 20}
             ], [
-                {host, "localhost"},
+                {host, "127.0.0.1"},
                 {port, 3306},
                 {user, "root"},
-                {password, "12345678"},
-                {database, "eos"}
+                {password, "123456"},
+                {database, "test"}
             ]}
         ]}
     ]},
 
-	{http, [
-		{port, 18080}
+	{example, [
+		{http_port, 8080}
 	]}
 	
 ].

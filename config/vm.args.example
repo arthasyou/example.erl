@@ -1,4 +1,4 @@
--sname erl_frame
+-sname erl_example
 
 -setcookie erl_frame_cookie
 

@@ -3,14 +3,14 @@
 %% @end
 %%%-------------------------------------------------------------------
 
--module(logic_app).
+-module(example_app).
 
 -behaviour(application).
 
 -export([start/2, stop/1]).
 
 start(_StartType, _StartArgs) ->
-	Reply = logic_sup:start_link(),
+	Reply = example_sup:start_link(),
 	web:start(),
 	Reply.
 
